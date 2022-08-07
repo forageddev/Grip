@@ -1,5 +1,6 @@
 package dev.foraged.grip
 
+import dev.foraged.cloudsync.shared.discovery.CloudSyncDiscoveryService
 import dev.foraged.commons.ExtendedPaperPlugin
 import dev.foraged.commons.annotations.container.ContainerEnable
 import dev.foraged.commons.config.annotations.ContainerConfig
@@ -60,5 +61,7 @@ class GripExtendedPlugin : ExtendedPaperPlugin()
             server.status = if (Bukkit.getServer().hasWhitelist()) ServerStatus.WHITELISTED else ServerStatus.ONLINE
         }
         GripShared().configure()
+
+        CloudSyncDiscoveryService.discoverable.assets.add("dev.foraged.grip:bukkit:grip-bukkit")
     }
 }

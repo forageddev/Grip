@@ -1,3 +1,12 @@
+plugins {
+    id "maven-publish"
+    id "com.jfrog.artifactory" version "4.28.2"
+    id "org.jetbrains.kotlin.jvm" version "1.6.21"
+    id "org.jetbrains.kotlin.kapt" version "1.6.21"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+
 allprojects {
     group "dev.foraged.grip"
     version "0.1.1"
@@ -5,5 +14,45 @@ allprojects {
     repositories {
         mavenCentral()
         mavenLocal()
+
+        maven {
+            name "Nyte"
+            url "${artifactory_contextUrl}/${artifactory_release}"
+
+            credentials {
+                username "${artifactory_user}"
+                password "${artifactory_password}"
+            }
+        }
     }
+}
+
+subprojects {
+    apply plugin: "maven-publish"
+    apply plugin: "com.jfrog.artifactory"
+    apply plugin: "org.jetbrains.kotlin.jvm"
+    apply plugin: "org.jetbrains.kotlin.kapt"
+    apply plugin: "com.github.johnrengelman.shadow"
+
+    publishing {
+        publications {
+            shadow(MavenPublication) { publication ->
+                project.shadow.component(publication)
+            }
+        }
+
+        repositories {
+            maven {
+                name "Nyte"
+                url "${artifactory_contextUrl}/${artifactory_release}"
+
+                credentials {
+                    username "${artifactory_user}"
+                    password "${artifactory_password}"
+                }
+            }
+        }
+    }
+
+    tasks.build.dependsOn(shadowJar, publishShadowPublicationToNyteRepository)
 }
