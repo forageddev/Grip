@@ -18,7 +18,7 @@ class Server(
     var heartbeat: Long = System.currentTimeMillis()
     val metaData = mutableMapOf<String, String>()
     val booting: Boolean get() = status == ServerStatus.BOOTING
-    val online: Boolean get() = status == ServerStatus.ONLINE
+    val online: Boolean get() = status == ServerStatus.ONLINE || whitelisted
     val whitelisted: Boolean get() = status == ServerStatus.WHITELISTED
     val offline: Boolean get() = status == ServerStatus.OFFLINE
 
